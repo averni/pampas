@@ -1,4 +1,5 @@
 #!/usr/bin/env python2.7
+# vim:syntax=python tabstop=4 shiftwidth=4 expandtab
 # -*- encoding: utf-8 -*-
 
 """Pampas core"""

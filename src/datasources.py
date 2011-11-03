@@ -1,5 +1,7 @@
 # -*- encoding: utf-8 -*-
+# vim:syntax=python tabstop=4 shiftwidth=4 expandtab
 #$Id$
+#$Date$
 
 """
 Datasource module.

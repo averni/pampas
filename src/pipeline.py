@@ -1,3 +1,5 @@
+# vim:syntax=python tabstop=4 shiftwidth=4 expandtab
+
 from xml.dom.minidom import  parse
 from getopt import getopt
 from events import EventDispatcher
