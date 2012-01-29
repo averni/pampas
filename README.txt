@@ -23,7 +23,7 @@ Utilizzo:
 
 - Producer:
     prod = mf.createProducer()
-    prod.sendMessage({"testo":"ciao da file"})
+    prod.sendMessage({"testo":"foo"})
 
 - Consumer:
     def f(h,m):
