@@ -433,6 +433,7 @@ class DocumentPipeline(EventDispatcher):
                 self.logger.critical('Configuration error in stage %s.%s :%s' % \
                                      (self.name, processor_xml.attributes['name'].value, str(ex)))
                 self.logger.exception(traceback.format_exc())
+		raise
 
         self.logger.info("[%s] Loading status handlers.." % self.name)
         handlers_xml = xml.getElementsByTagName("status_handlers")
