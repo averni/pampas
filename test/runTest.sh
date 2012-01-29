@@ -1,7 +1,7 @@
 #!/bin/sh
 
 #export PYTHONPATH=$PYTHONPATH:/home/antonio/code/codebase/pampas/src
-export PYTHONPATH=$PYTHONPATH:/home/antonio/code/trunk/commons/python/
+export PYTHONPATH=$PYTHONPATH:/home/antonio/code/kadev/commons/python/
 
 #python test.py
 #python testOneShot.py
