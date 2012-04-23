@@ -1287,11 +1287,8 @@ def main():
         traceback.print_exc()
     finally:
         amqfactory.disconnectAll()
-
     print "fine main"
     
 
 if __name__ == '__main__':
     main()
-
-
