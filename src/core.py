@@ -82,6 +82,13 @@ class CustomCommandEvent(Event):
     """
     pass
 
+class AmqDisconnectedEvent(Event):
+    """
+    A AmqDisconnectedEvent is fired by AMQListener when it receives a disconnected event
+    """
+    pass
+
+
 class AmqErrorEvent(Event):
     """
     A AmqErrorEvent is fired by AMQListener when it receives an error 
@@ -364,6 +371,10 @@ class AMQStompConnector(object):
         def on_receipt(self, headers, message):
             logger.debug("RECEIPT %s %s" % (headers, message))
 
+        def on_disconnected(self):
+            logger.warning("Catched disconnection")
+            self.dispatcher.fire(AmqDisconnectedEvent()) 
+
         def on_message(self, headers, message):
             message, headers = self.encoder.decode(message, headers)
             logger.debug("Received: %s" % str((headers, message)))
@@ -604,6 +615,7 @@ class Consumer(StatsConsumer):
 
     >>> def f(h,m): print h,m
     >>> amqfactory = AMQClientFactory({'host_and_ports':[('localhost', 61116)]})
+    >>> amqfactory.setMessageQueue('pampas.test')
     >>> amqfactory.spawnConsumers(f, 3)
     >>> client = amqfactory.createConsumerClient()
     >>> client.connect()
@@ -641,6 +653,13 @@ class Consumer(StatsConsumer):
         if self.controllerthread.is_alive():
             self.controllerthread.join()
         StatsConsumer.disconnect(self)
+
+    def reconnect(self):
+        retry_sleep = 60
+        logger.debug("Disconnected! Waiting %d before retry" % retry_sleep)
+        self.disconnect()
+        time.sleep(retry_sleep)
+        self.connect()
 
     def addcustomcommand(self, ctype, callback):
         self.commandscallbacks[ctype] = callback
@@ -702,6 +721,11 @@ class Consumer(StatsConsumer):
         def on_amqerror_event(self, event):
             logger.debug("Received AmqError error: %s" % event)
             #self.owner.disconnect()
+
+        @handle_events(AmqDisconnectedEvent)
+        def on_amqdisconnected_event(self, event):
+            logger.debug("Received AmqDisconnection error: %s" % event)
+            self.owner.reconnect()
 
         @handle_events(StatsEvent)
         def on_stats_event(self, event):
@@ -1287,8 +1311,11 @@ def main():
         traceback.print_exc()
     finally:
         amqfactory.disconnectAll()
+
     print "fine main"
     
 
 if __name__ == '__main__':
     main()
+
+
