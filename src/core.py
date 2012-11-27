@@ -290,8 +290,9 @@ class AMQStompConnector(object):
             self.connection.start()
             self.connection.connect(wait=True)
             logger.debug("Connected.")
-        except stomp.exception.ReconnectFailedException:
-            logger.critical("Connection error")
+        #except stomp.exception.ReconnectFailedException:
+        except Exception, ex:
+            logger.critical("Connection error", ex)
             trace = sys.exc_info()[2]
             raise ConnectionError('Connection failed!'), None, trace
 
