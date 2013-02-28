@@ -267,12 +267,16 @@ class CurlHTTPFetcher(HTTPFetcher):
             raise HTTPError("No blank line at end of headers: %r" % (line,))
 
         headers = {}
+        if lines:
+            while lines and (lines[0].strip() == '' or lines[0].startswith("HTTP")):
+                lines = lines[1:]
+
         for line in lines:
             try:
                 name, value = line.split(':', 1)
             except ValueError:
                 raise HTTPError(
-                    "Malformed HTTP header line in response: %r" % (line,))
+                    "Malformed HTTP header line in response: %r\n %s" % (line, lines))
 
             value = value.strip()
 
@@ -288,6 +292,7 @@ class CurlHTTPFetcher(HTTPFetcher):
         return _allowedURL(url)
 
     def fetch(self, url, body=None, headers=None, timeout=None):
+        url = url.encode("utf-8") if isinstance(url, unicode) else url
         timeout = timeout or ALLOWED_TIME
         stop = int(time.time()) + timeout
         off = timeout
