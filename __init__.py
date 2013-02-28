@@ -5,3 +5,4 @@ from src.pipeline import *
 from src.mysqlhelper import *
 from src.datasources import *
 from src.loaders import *
+from src.events import *
